@@ -1,0 +1,196 @@
+// Airport database: IATA code, name, city, ISO2 country, lat, lon, IANA timezone.
+// Extend via Settings > "Add custom airport" in the app (stored in localStorage).
+const AIRPORTS = [
+  // ---- India ----
+  { code: "HYD", name: "Rajiv Gandhi Intl", city: "Hyderabad", country: "IN", lat: 17.2403, lon: 78.4294, tz: "Asia/Kolkata" },
+  { code: "DEL", name: "Indira Gandhi Intl", city: "Delhi", country: "IN", lat: 28.5562, lon: 77.1000, tz: "Asia/Kolkata" },
+  { code: "BOM", name: "Chhatrapati Shivaji Maharaj Intl", city: "Mumbai", country: "IN", lat: 19.0896, lon: 72.8656, tz: "Asia/Kolkata" },
+  { code: "BLR", name: "Kempegowda Intl", city: "Bengaluru", country: "IN", lat: 13.1986, lon: 77.7066, tz: "Asia/Kolkata" },
+  { code: "MAA", name: "Chennai Intl", city: "Chennai", country: "IN", lat: 12.9941, lon: 80.1709, tz: "Asia/Kolkata" },
+  { code: "CCU", name: "Netaji Subhas Chandra Bose Intl", city: "Kolkata", country: "IN", lat: 22.6547, lon: 88.4467, tz: "Asia/Kolkata" },
+  { code: "GOI", name: "Dabolim", city: "Goa", country: "IN", lat: 15.3808, lon: 73.8314, tz: "Asia/Kolkata" },
+  { code: "GOX", name: "Manohar Intl", city: "Goa", country: "IN", lat: 15.6800, lon: 73.7333, tz: "Asia/Kolkata" },
+  { code: "COK", name: "Cochin Intl", city: "Kochi", country: "IN", lat: 10.1520, lon: 76.4019, tz: "Asia/Kolkata" },
+  { code: "AMD", name: "Sardar Vallabhbhai Patel Intl", city: "Ahmedabad", country: "IN", lat: 23.0772, lon: 72.6347, tz: "Asia/Kolkata" },
+  { code: "PNQ", name: "Pune Intl", city: "Pune", country: "IN", lat: 18.5822, lon: 73.9197, tz: "Asia/Kolkata" },
+  { code: "JAI", name: "Jaipur Intl", city: "Jaipur", country: "IN", lat: 26.8242, lon: 75.8122, tz: "Asia/Kolkata" },
+  { code: "LKO", name: "Chaudhary Charan Singh Intl", city: "Lucknow", country: "IN", lat: 26.7606, lon: 80.8893, tz: "Asia/Kolkata" },
+  { code: "GAU", name: "Lokpriya Gopinath Bordoloi Intl", city: "Guwahati", country: "IN", lat: 26.1061, lon: 91.5859, tz: "Asia/Kolkata" },
+  { code: "IXC", name: "Chandigarh", city: "Chandigarh", country: "IN", lat: 30.6735, lon: 76.7885, tz: "Asia/Kolkata" },
+  { code: "ATQ", name: "Sri Guru Ram Dass Jee Intl", city: "Amritsar", country: "IN", lat: 31.7096, lon: 74.7973, tz: "Asia/Kolkata" },
+  { code: "VNS", name: "Lal Bahadur Shastri Intl", city: "Varanasi", country: "IN", lat: 25.4524, lon: 82.8593, tz: "Asia/Kolkata" },
+  { code: "IXJ", name: "Jammu", city: "Jammu", country: "IN", lat: 32.6891, lon: 74.8374, tz: "Asia/Kolkata" },
+  { code: "IXZ", name: "Veer Savarkar Intl", city: "Port Blair", country: "IN", lat: 11.6411, lon: 92.7297, tz: "Asia/Kolkata" },
+  { code: "TRV", name: "Thiruvananthapuram Intl", city: "Thiruvananthapuram", country: "IN", lat: 8.4821, lon: 76.9200, tz: "Asia/Kolkata" },
+  { code: "VTZ", name: "Visakhapatnam", city: "Visakhapatnam", country: "IN", lat: 17.7211, lon: 83.2245, tz: "Asia/Kolkata" },
+  { code: "IDR", name: "Devi Ahilyabai Holkar", city: "Indore", country: "IN", lat: 22.7218, lon: 75.8011, tz: "Asia/Kolkata" },
+  { code: "NAG", name: "Dr. Babasaheb Ambedkar Intl", city: "Nagpur", country: "IN", lat: 21.0922, lon: 79.0472, tz: "Asia/Kolkata" },
+  { code: "PAT", name: "Jay Prakash Narayan", city: "Patna", country: "IN", lat: 25.5913, lon: 85.0879, tz: "Asia/Kolkata" },
+  { code: "RPR", name: "Swami Vivekananda", city: "Raipur", country: "IN", lat: 21.1804, lon: 81.7388, tz: "Asia/Kolkata" },
+  { code: "BBI", name: "Biju Patnaik Intl", city: "Bhubaneswar", country: "IN", lat: 20.2444, lon: 85.8178, tz: "Asia/Kolkata" },
+  { code: "IXR", name: "Birsa Munda", city: "Ranchi", country: "IN", lat: 23.3143, lon: 85.3217, tz: "Asia/Kolkata" },
+  { code: "IXA", name: "Maharaja Bir Bikram", city: "Agartala", country: "IN", lat: 23.8870, lon: 91.2404, tz: "Asia/Kolkata" },
+  { code: "STV", name: "Surat", city: "Surat", country: "IN", lat: 21.1141, lon: 72.7420, tz: "Asia/Kolkata" },
+  { code: "IXM", name: "Madurai", city: "Madurai", country: "IN", lat: 9.8345, lon: 78.0934, tz: "Asia/Kolkata" },
+  { code: "CJB", name: "Coimbatore Intl", city: "Coimbatore", country: "IN", lat: 11.0300, lon: 77.0434, tz: "Asia/Kolkata" },
+  { code: "IXE", name: "Mangaluru Intl", city: "Mangaluru", country: "IN", lat: 12.9613, lon: 74.8900, tz: "Asia/Kolkata" },
+  { code: "BDQ", name: "Vadodara", city: "Vadodara", country: "IN", lat: 22.3362, lon: 73.2263, tz: "Asia/Kolkata" },
+  { code: "DED", name: "Jolly Grant", city: "Dehradun", country: "IN", lat: 30.1897, lon: 78.1804, tz: "Asia/Kolkata" },
+  { code: "SXR", name: "Srinagar", city: "Srinagar", country: "IN", lat: 33.9871, lon: 74.7743, tz: "Asia/Kolkata" },
+  { code: "IXB", name: "Bagdogra", city: "Bagdogra", country: "IN", lat: 26.6812, lon: 88.3286, tz: "Asia/Kolkata" },
+  { code: "IXL", name: "Kushok Bakula Rimpochee", city: "Leh", country: "IN", lat: 34.1358, lon: 77.5465, tz: "Asia/Kolkata" },
+  { code: "TIR", name: "Tirupati", city: "Tirupati", country: "IN", lat: 13.6325, lon: 79.5433, tz: "Asia/Kolkata" },
+  { code: "VGA", name: "Vijayawada", city: "Vijayawada", country: "IN", lat: 16.5304, lon: 80.7968, tz: "Asia/Kolkata" },
+  { code: "PHT", name: "Phata Helipad", city: "Phata", country: "IN", lat: 30.5926, lon: 79.1013, tz: "Asia/Kolkata" },
+  { code: "KDN", name: "Kedarnath Helipad", city: "Kedarnath", country: "IN", lat: 30.7346, lon: 79.0669, tz: "Asia/Kolkata" },
+
+  // ---- USA / Canada ----
+  { code: "JFK", name: "John F Kennedy Intl", city: "New York", country: "US", lat: 40.6413, lon: -73.7781, tz: "America/New_York" },
+  { code: "EWR", name: "Newark Liberty Intl", city: "Newark", country: "US", lat: 40.6895, lon: -74.1745, tz: "America/New_York" },
+  { code: "LGA", name: "LaGuardia", city: "New York", country: "US", lat: 40.7769, lon: -73.8740, tz: "America/New_York" },
+  { code: "BOS", name: "Logan Intl", city: "Boston", country: "US", lat: 42.3656, lon: -71.0096, tz: "America/New_York" },
+  { code: "IAD", name: "Washington Dulles Intl", city: "Washington DC", country: "US", lat: 38.9531, lon: -77.4565, tz: "America/New_York" },
+  { code: "ORD", name: "O'Hare Intl", city: "Chicago", country: "US", lat: 41.9742, lon: -87.9073, tz: "America/Chicago" },
+  { code: "ATL", name: "Hartsfield-Jackson Intl", city: "Atlanta", country: "US", lat: 33.6407, lon: -84.4277, tz: "America/New_York" },
+  { code: "DFW", name: "Dallas/Fort Worth Intl", city: "Dallas", country: "US", lat: 32.8998, lon: -97.0403, tz: "America/Chicago" },
+  { code: "IAH", name: "George Bush Intercontinental", city: "Houston", country: "US", lat: 29.9902, lon: -95.3368, tz: "America/Chicago" },
+  { code: "DEN", name: "Denver Intl", city: "Denver", country: "US", lat: 39.8561, lon: -104.6737, tz: "America/Denver" },
+  { code: "LAX", name: "Los Angeles Intl", city: "Los Angeles", country: "US", lat: 33.9416, lon: -118.4085, tz: "America/Los_Angeles" },
+  { code: "SFO", name: "San Francisco Intl", city: "San Francisco", country: "US", lat: 37.6213, lon: -122.3790, tz: "America/Los_Angeles" },
+  { code: "SJC", name: "San Jose Intl", city: "San Jose", country: "US", lat: 37.3639, lon: -121.9289, tz: "America/Los_Angeles" },
+  { code: "SEA", name: "Seattle-Tacoma Intl", city: "Seattle", country: "US", lat: 47.4502, lon: -122.3088, tz: "America/Los_Angeles" },
+  { code: "SAN", name: "San Diego Intl", city: "San Diego", country: "US", lat: 32.7338, lon: -117.1933, tz: "America/Los_Angeles" },
+  { code: "LAS", name: "Harry Reid Intl", city: "Las Vegas", country: "US", lat: 36.0840, lon: -115.1537, tz: "America/Los_Angeles" },
+  { code: "PHX", name: "Sky Harbor Intl", city: "Phoenix", country: "US", lat: 33.4373, lon: -112.0078, tz: "America/Phoenix" },
+  { code: "MIA", name: "Miami Intl", city: "Miami", country: "US", lat: 25.7959, lon: -80.2870, tz: "America/New_York" },
+  { code: "MCO", name: "Orlando Intl", city: "Orlando", country: "US", lat: 28.4312, lon: -81.3081, tz: "America/New_York" },
+  { code: "AUS", name: "Austin-Bergstrom Intl", city: "Austin", country: "US", lat: 30.1975, lon: -97.6664, tz: "America/Chicago" },
+  { code: "PHL", name: "Philadelphia Intl", city: "Philadelphia", country: "US", lat: 39.8744, lon: -75.2424, tz: "America/New_York" },
+  { code: "DTW", name: "Detroit Metro", city: "Detroit", country: "US", lat: 42.2124, lon: -83.3534, tz: "America/Detroit" },
+  { code: "MSP", name: "Minneapolis-Saint Paul Intl", city: "Minneapolis", country: "US", lat: 44.8848, lon: -93.2223, tz: "America/Chicago" },
+  { code: "RDU", name: "Raleigh-Durham Intl", city: "Raleigh", country: "US", lat: 35.8776, lon: -78.7875, tz: "America/New_York" },
+  { code: "CLT", name: "Charlotte Douglas Intl", city: "Charlotte", country: "US", lat: 35.2144, lon: -80.9473, tz: "America/New_York" },
+  { code: "YYZ", name: "Toronto Pearson Intl", city: "Toronto", country: "CA", lat: 43.6777, lon: -79.6248, tz: "America/Toronto" },
+  { code: "YVR", name: "Vancouver Intl", city: "Vancouver", country: "CA", lat: 49.1947, lon: -123.1792, tz: "America/Vancouver" },
+  { code: "YUL", name: "Montreal-Trudeau Intl", city: "Montreal", country: "CA", lat: 45.4706, lon: -73.7408, tz: "America/Toronto" },
+  { code: "CLE", name: "Cleveland Hopkins Intl", city: "Cleveland", country: "US", lat: 41.4117, lon: -81.8498, tz: "America/New_York" },
+  { code: "MDW", name: "Chicago Midway Intl", city: "Chicago", country: "US", lat: 41.7868, lon: -87.7522, tz: "America/Chicago" },
+  { code: "OAK", name: "Oakland Intl", city: "Oakland", country: "US", lat: 37.7126, lon: -122.2197, tz: "America/Los_Angeles" },
+  // NOTE: LVS's only registered meaning is Las Vegas Municipal (San Miguel County, NM) -
+  // a tiny general-aviation strip. Your export shows Southwest flights through it, which
+  // usually fly LAS (Las Vegas Harry Reid, NV) instead - double check this one in Settings.
+  { code: "LVS", name: "Las Vegas Municipal", city: "Las Vegas, NM", country: "US", lat: 35.6537, lon: -105.1425, tz: "America/Denver" },
+
+  // ---- Europe ----
+  { code: "LHR", name: "Heathrow", city: "London", country: "GB", lat: 51.4700, lon: -0.4543, tz: "Europe/London" },
+  { code: "LGW", name: "Gatwick", city: "London", country: "GB", lat: 51.1537, lon: -0.1821, tz: "Europe/London" },
+  { code: "MAN", name: "Manchester", city: "Manchester", country: "GB", lat: 53.3537, lon: -2.2750, tz: "Europe/London" },
+  { code: "CDG", name: "Charles de Gaulle", city: "Paris", country: "FR", lat: 49.0097, lon: 2.5479, tz: "Europe/Paris" },
+  { code: "ORY", name: "Orly", city: "Paris", country: "FR", lat: 48.7233, lon: 2.3794, tz: "Europe/Paris" },
+  { code: "AMS", name: "Schiphol", city: "Amsterdam", country: "NL", lat: 52.3105, lon: 4.7683, tz: "Europe/Amsterdam" },
+  { code: "FRA", name: "Frankfurt Airport", city: "Frankfurt", country: "DE", lat: 50.0379, lon: 8.5622, tz: "Europe/Berlin" },
+  { code: "MUC", name: "Munich Airport", city: "Munich", country: "DE", lat: 48.3538, lon: 11.7861, tz: "Europe/Berlin" },
+  { code: "BER", name: "Brandenburg", city: "Berlin", country: "DE", lat: 52.3667, lon: 13.5033, tz: "Europe/Berlin" },
+  { code: "ZRH", name: "Zurich Airport", city: "Zurich", country: "CH", lat: 47.4647, lon: 8.5492, tz: "Europe/Zurich" },
+  { code: "GVA", name: "Geneva Airport", city: "Geneva", country: "CH", lat: 46.2381, lon: 6.1090, tz: "Europe/Zurich" },
+  { code: "MXP", name: "Malpensa", city: "Milan", country: "IT", lat: 45.6306, lon: 8.7281, tz: "Europe/Rome" },
+  { code: "FCO", name: "Fiumicino", city: "Rome", country: "IT", lat: 41.8003, lon: 12.2389, tz: "Europe/Rome" },
+  { code: "MAD", name: "Adolfo Suarez Barajas", city: "Madrid", country: "ES", lat: 40.4936, lon: -3.5668, tz: "Europe/Madrid" },
+  { code: "BCN", name: "El Prat", city: "Barcelona", country: "ES", lat: 41.2974, lon: 2.0833, tz: "Europe/Madrid" },
+  { code: "LIS", name: "Humberto Delgado", city: "Lisbon", country: "PT", lat: 38.7742, lon: -9.1342, tz: "Europe/Lisbon" },
+  { code: "VIE", name: "Vienna Intl", city: "Vienna", country: "AT", lat: 48.1103, lon: 16.5697, tz: "Europe/Vienna" },
+  { code: "IST", name: "Istanbul Airport", city: "Istanbul", country: "TR", lat: 41.2753, lon: 28.7519, tz: "Europe/Istanbul" },
+  { code: "ATH", name: "Eleftherios Venizelos", city: "Athens", country: "GR", lat: 37.9364, lon: 23.9445, tz: "Europe/Athens" },
+  { code: "CPH", name: "Kastrup", city: "Copenhagen", country: "DK", lat: 55.6180, lon: 12.6560, tz: "Europe/Copenhagen" },
+  { code: "ARN", name: "Arlanda", city: "Stockholm", country: "SE", lat: 59.6519, lon: 17.9186, tz: "Europe/Stockholm" },
+  { code: "OSL", name: "Gardermoen", city: "Oslo", country: "NO", lat: 60.1976, lon: 11.1004, tz: "Europe/Oslo" },
+  { code: "HEL", name: "Vantaa", city: "Helsinki", country: "FI", lat: 60.3172, lon: 24.9633, tz: "Europe/Helsinki" },
+  { code: "DUB", name: "Dublin Airport", city: "Dublin", country: "IE", lat: 53.4213, lon: -6.2701, tz: "Europe/Dublin" },
+  { code: "WAW", name: "Chopin Airport", city: "Warsaw", country: "PL", lat: 52.1657, lon: 20.9671, tz: "Europe/Warsaw" },
+  { code: "PRG", name: "Vaclav Havel", city: "Prague", country: "CZ", lat: 50.1008, lon: 14.2600, tz: "Europe/Prague" },
+  { code: "BUD", name: "Ferenc Liszt Intl", city: "Budapest", country: "HU", lat: 47.4298, lon: 19.2611, tz: "Europe/Budapest" },
+  { code: "BRU", name: "Brussels Airport", city: "Brussels", country: "BE", lat: 50.9014, lon: 4.4844, tz: "Europe/Brussels" },
+
+  // ---- Middle East ----
+  { code: "DXB", name: "Dubai Intl", city: "Dubai", country: "AE", lat: 25.2532, lon: 55.3657, tz: "Asia/Dubai" },
+  { code: "AUH", name: "Zayed Intl", city: "Abu Dhabi", country: "AE", lat: 24.4330, lon: 54.6511, tz: "Asia/Dubai" },
+  { code: "SHJ", name: "Sharjah Intl", city: "Sharjah", country: "AE", lat: 25.3286, lon: 55.5172, tz: "Asia/Dubai" },
+  { code: "DOH", name: "Hamad Intl", city: "Doha", country: "QA", lat: 25.2731, lon: 51.6081, tz: "Asia/Qatar" },
+  { code: "JED", name: "King Abdulaziz Intl", city: "Jeddah", country: "SA", lat: 21.6796, lon: 39.1565, tz: "Asia/Riyadh" },
+  { code: "RUH", name: "King Khalid Intl", city: "Riyadh", country: "SA", lat: 24.9576, lon: 46.6988, tz: "Asia/Riyadh" },
+  { code: "BAH", name: "Bahrain Intl", city: "Manama", country: "BH", lat: 26.2708, lon: 50.6336, tz: "Asia/Bahrain" },
+  { code: "MCT", name: "Muscat Intl", city: "Muscat", country: "OM", lat: 23.5933, lon: 58.2844, tz: "Asia/Muscat" },
+  { code: "KWI", name: "Kuwait Intl", city: "Kuwait City", country: "KW", lat: 29.2266, lon: 47.9689, tz: "Asia/Kuwait" },
+  { code: "AMM", name: "Queen Alia Intl", city: "Amman", country: "JO", lat: 31.7226, lon: 35.9932, tz: "Asia/Amman" },
+  { code: "TLV", name: "Ben Gurion", city: "Tel Aviv", country: "IL", lat: 32.0055, lon: 34.8854, tz: "Asia/Jerusalem" },
+
+  // ---- Asia ----
+  { code: "SIN", name: "Changi", city: "Singapore", country: "SG", lat: 1.3644, lon: 103.9915, tz: "Asia/Singapore" },
+  { code: "KUL", name: "Kuala Lumpur Intl", city: "Kuala Lumpur", country: "MY", lat: 2.7456, lon: 101.7099, tz: "Asia/Kuala_Lumpur" },
+  { code: "PEN", name: "Penang Intl", city: "Penang", country: "MY", lat: 5.2971, lon: 100.2769, tz: "Asia/Kuala_Lumpur" },
+  { code: "BKK", name: "Suvarnabhumi", city: "Bangkok", country: "TH", lat: 13.6900, lon: 100.7501, tz: "Asia/Bangkok" },
+  { code: "DMK", name: "Don Mueang Intl", city: "Bangkok", country: "TH", lat: 13.9126, lon: 100.6068, tz: "Asia/Bangkok" },
+  { code: "HKT", name: "Phuket Intl", city: "Phuket", country: "TH", lat: 8.1132, lon: 98.3169, tz: "Asia/Bangkok" },
+  { code: "CGK", name: "Soekarno-Hatta Intl", city: "Jakarta", country: "ID", lat: -6.1256, lon: 106.6559, tz: "Asia/Jakarta" },
+  { code: "DPS", name: "Ngurah Rai Intl", city: "Denpasar (Bali)", country: "ID", lat: -8.7482, lon: 115.1671, tz: "Asia/Makassar" },
+  { code: "MNL", name: "Ninoy Aquino Intl", city: "Manila", country: "PH", lat: 14.5086, lon: 121.0198, tz: "Asia/Manila" },
+  { code: "HAN", name: "Noi Bai Intl", city: "Hanoi", country: "VN", lat: 21.2212, lon: 105.8072, tz: "Asia/Ho_Chi_Minh" },
+  { code: "SGN", name: "Tan Son Nhat Intl", city: "Ho Chi Minh City", country: "VN", lat: 10.8188, lon: 106.6520, tz: "Asia/Ho_Chi_Minh" },
+  { code: "HKG", name: "Hong Kong Intl", city: "Hong Kong", country: "HK", lat: 22.3080, lon: 113.9185, tz: "Asia/Hong_Kong" },
+  { code: "TPE", name: "Taoyuan Intl", city: "Taipei", country: "TW", lat: 25.0797, lon: 121.2342, tz: "Asia/Taipei" },
+  { code: "ICN", name: "Incheon Intl", city: "Seoul", country: "KR", lat: 37.4602, lon: 126.4407, tz: "Asia/Seoul" },
+  { code: "NRT", name: "Narita Intl", city: "Tokyo", country: "JP", lat: 35.7647, lon: 140.3864, tz: "Asia/Tokyo" },
+  { code: "HND", name: "Haneda", city: "Tokyo", country: "JP", lat: 35.5494, lon: 139.7798, tz: "Asia/Tokyo" },
+  { code: "KIX", name: "Kansai Intl", city: "Osaka", country: "JP", lat: 34.4347, lon: 135.2440, tz: "Asia/Tokyo" },
+  { code: "PVG", name: "Pudong Intl", city: "Shanghai", country: "CN", lat: 31.1443, lon: 121.8083, tz: "Asia/Shanghai" },
+  { code: "PEK", name: "Capital Intl", city: "Beijing", country: "CN", lat: 40.0799, lon: 116.6031, tz: "Asia/Shanghai" },
+  { code: "CAN", name: "Baiyun Intl", city: "Guangzhou", country: "CN", lat: 23.3924, lon: 113.2988, tz: "Asia/Shanghai" },
+  { code: "KTM", name: "Tribhuvan Intl", city: "Kathmandu", country: "NP", lat: 27.6966, lon: 85.3591, tz: "Asia/Kathmandu" },
+  { code: "DAC", name: "Hazrat Shahjalal Intl", city: "Dhaka", country: "BD", lat: 23.8433, lon: 90.3978, tz: "Asia/Dhaka" },
+  { code: "CMB", name: "Bandaranaike Intl", city: "Colombo", country: "LK", lat: 7.1808, lon: 79.8841, tz: "Asia/Colombo" },
+  { code: "MLE", name: "Velana Intl", city: "Male", country: "MV", lat: 4.1918, lon: 73.5290, tz: "Indian/Maldives" },
+  { code: "JHB", name: "Senai Intl", city: "Johor Bahru", country: "MY", lat: 1.6414, lon: 103.6698, tz: "Asia/Kuala_Lumpur" },
+  { code: "LGK", name: "Langkawi Intl", city: "Langkawi", country: "MY", lat: 6.3297, lon: 99.7286, tz: "Asia/Kuala_Lumpur" },
+  { code: "NNS", name: "Naini Saini", city: "Pithoragarh", country: "IN", lat: 29.6011, lon: 80.2211, tz: "Asia/Kolkata" },
+
+  // ---- Oceania ----
+  { code: "SYD", name: "Kingsford Smith", city: "Sydney", country: "AU", lat: -33.9399, lon: 151.1753, tz: "Australia/Sydney" },
+  { code: "MEL", name: "Melbourne Airport", city: "Melbourne", country: "AU", lat: -37.6690, lon: 144.8410, tz: "Australia/Melbourne" },
+  { code: "BNE", name: "Brisbane Airport", city: "Brisbane", country: "AU", lat: -27.3842, lon: 153.1175, tz: "Australia/Brisbane" },
+  { code: "PER", name: "Perth Airport", city: "Perth", country: "AU", lat: -31.9403, lon: 115.9669, tz: "Australia/Perth" },
+  { code: "AKL", name: "Auckland Airport", city: "Auckland", country: "NZ", lat: -37.0082, lon: 174.7850, tz: "Pacific/Auckland" },
+
+  // ---- Africa ----
+  { code: "CAI", name: "Cairo Intl", city: "Cairo", country: "EG", lat: 30.1219, lon: 31.4056, tz: "Africa/Cairo" },
+  { code: "JNB", name: "OR Tambo Intl", city: "Johannesburg", country: "ZA", lat: -26.1392, lon: 28.2460, tz: "Africa/Johannesburg" },
+  { code: "CPT", name: "Cape Town Intl", city: "Cape Town", country: "ZA", lat: -33.9715, lon: 18.6021, tz: "Africa/Johannesburg" },
+  { code: "NBO", name: "Jomo Kenyatta Intl", city: "Nairobi", country: "KE", lat: -1.3192, lon: 36.9278, tz: "Africa/Nairobi" },
+  { code: "ADD", name: "Bole Intl", city: "Addis Ababa", country: "ET", lat: 8.9779, lon: 38.7993, tz: "Africa/Addis_Ababa" },
+  { code: "LOS", name: "Murtala Muhammed Intl", city: "Lagos", country: "NG", lat: 6.5774, lon: 3.3212, tz: "Africa/Lagos" },
+  { code: "MRU", name: "Sir Seewoosagur Ramgoolam Intl", city: "Mauritius", country: "MU", lat: -20.4302, lon: 57.6836, tz: "Indian/Mauritius" },
+  { code: "SEZ", name: "Seychelles Intl", city: "Mahe", country: "SC", lat: -4.6743, lon: 55.5218, tz: "Indian/Mahe" },
+
+  // ---- South America ----
+  { code: "GRU", name: "Guarulhos Intl", city: "Sao Paulo", country: "BR", lat: -23.4356, lon: -46.4731, tz: "America/Sao_Paulo" },
+  { code: "GIG", name: "Galeao Intl", city: "Rio de Janeiro", country: "BR", lat: -22.8090, lon: -43.2506, tz: "America/Sao_Paulo" },
+  { code: "EZE", name: "Ministro Pistarini", city: "Buenos Aires", country: "AR", lat: -34.8222, lon: -58.5358, tz: "America/Argentina/Buenos_Aires" },
+  { code: "SCL", name: "Arturo Merino Benitez", city: "Santiago", country: "CL", lat: -33.3930, lon: -70.7858, tz: "America/Santiago" },
+  { code: "BOG", name: "El Dorado Intl", city: "Bogota", country: "CO", lat: 4.7016, lon: -74.1469, tz: "America/Bogota" },
+  { code: "LIM", name: "Jorge Chavez Intl", city: "Lima", country: "PE", lat: -12.0219, lon: -77.1143, tz: "America/Lima" },
+];
+
+// Merge in any custom airports the user has added, stored in localStorage.
+function loadAllAirports() {
+  try {
+    const custom = JSON.parse(localStorage.getItem("globetrotter_custom_airports") || "[]");
+    return AIRPORTS.concat(custom);
+  } catch (e) {
+    return AIRPORTS.slice();
+  }
+}
+
+function addCustomAirport(airport) {
+  const custom = JSON.parse(localStorage.getItem("globetrotter_custom_airports") || "[]");
+  custom.push(airport);
+  localStorage.setItem("globetrotter_custom_airports", JSON.stringify(custom));
+}

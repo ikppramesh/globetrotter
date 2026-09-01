@@ -1,0 +1,5 @@
+# Raw Flighty CSV exports can contain PNR/booking reference codes - never commit them.
+# The app itself doesn't need this file; it reads from js/seedFlights.js.
+data/
+
+.DS_Store

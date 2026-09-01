@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Globetrotter</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='75' font-size='75'%3E%E2%9C%88%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">✈</span>
+      <span class="brand-name">Globetrotter</span>
+    </div>
+    <div class="home-clock" id="home-clock">
+      <span id="home-icon">☀️</span>
+      <span id="home-time">--:--:--</span>
+      <span class="home-label" id="home-label">Home</span>
+      <span class="home-date" id="home-date"></span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" id="settings-btn">Settings</button>
+      <button class="btn btn-primary" id="add-flight-btn">+ Add Flight</button>
+    </div>
+  </header>
+
+  <div class="clock-strip-wrap">
+    <div class="clock-strip" id="clock-strip"></div>
+  </div>
+
+  <main>
+    <section class="map-section reveal">
+      <div id="map"></div>
+    </section>
+
+    <section class="boarding-pass reveal" id="boarding-pass">
+      <div class="bp-shine" aria-hidden="true"></div>
+      <div class="bp-main">
+        <div class="bp-header">
+          <div class="bp-brand"><span class="bp-brand-icon">✈</span> Ramesh's GLOBETROTTER</div>
+          <div class="bp-class">FREQUENT FLYER BOARDING PASS</div>
+        </div>
+
+        <div class="bp-fields-grid">
+          <div class="bp-field"><span class="bp-label">Authority</span><span class="bp-value">Globetrotter</span></div>
+          <div class="bp-field"><span class="bp-label">Place of issue</span><span class="bp-value" id="place-of-issue">--</span></div>
+          <div class="bp-field"><span class="bp-label">Date of issue</span><span class="bp-value" id="date-of-issue">--</span></div>
+          <div class="bp-field"><span class="bp-label">Member since</span><span class="bp-value" id="member-since">--</span></div>
+          <div class="bp-field"><span class="bp-label">Distance</span><span class="bp-value"><span id="stat-distance">0</span> km</span></div>
+          <div class="bp-field"><span class="bp-label">Flight time</span><span class="bp-value" id="stat-time">0h 0m</span></div>
+          <div class="bp-field"><span class="bp-label">Airports</span><span class="bp-value" id="stat-airports">0</span></div>
+          <div class="bp-field"><span class="bp-label">Airlines</span><span class="bp-value" id="stat-airlines">0</span></div>
+        </div>
+
+        <div class="flags-row" id="flags-row"></div>
+        <div class="bp-barcode" aria-hidden="true"></div>
+      </div>
+
+      <div class="bp-perforation" aria-hidden="true"></div>
+
+      <div class="bp-stub">
+        <div class="stub-icon">✈</div>
+        <div class="stub-number" id="stat-flights">0</div>
+        <div class="stub-label">flights</div>
+        <div class="bp-mrz">
+          <div id="mrz-1">ALLTIME&lt;&lt;&lt;&lt;MEMBER&lt;&lt;@GLOBETROTTER&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+          <div id="mrz-2">ISSUED&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;GLOBETROTTER</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-section reveal">
+      <div class="section-header">
+        <h3>Dashboard</h3>
+      </div>
+
+      <div class="kpi-row" id="kpi-row"></div>
+
+      <div class="dash-card full-width">
+        <h4>Continents covered</h4>
+        <div class="continents-grid" id="continents-grid"></div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-card">
+          <h4>Flights by year</h4>
+          <div class="bar-chart" id="chart-years"></div>
+        </div>
+        <div class="dash-card">
+          <h4>Top airlines</h4>
+          <div class="bar-chart" id="chart-airlines"></div>
+        </div>
+        <div class="dash-card">
+          <h4>Aircraft type</h4>
+          <div class="stacked-bar" id="chart-aircraft"></div>
+          <div class="chart-legend" id="legend-aircraft"></div>
+        </div>
+        <div class="dash-card">
+          <h4>Domestic vs International</h4>
+          <div class="stacked-bar" id="chart-domestic"></div>
+          <div class="chart-legend" id="legend-domestic"></div>
+        </div>
+      </div>
+
+      <div class="dash-card full-width">
+        <h4>Top routes</h4>
+        <div class="table-wrap">
+          <table class="routes-table">
+            <thead><tr><th>Route</th><th>Flights</th><th>Distance (one-way)</th></tr></thead>
+            <tbody id="routes-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="flights-section reveal">
+      <div class="section-header">
+        <h3>Flight Log</h3>
+      </div>
+      <div class="flight-list" id="flight-list"></div>
+    </section>
+  </main>
+
+  <!-- Add / Edit Flight dialog -->
+  <dialog id="flight-dialog">
+    <form id="flight-form">
+      <h3 id="dialog-title">Add Flight</h3>
+
+      <div class="form-grid">
+        <label>Date
+          <input type="date" name="date" required />
+        </label>
+        <label>Airline
+          <input type="text" name="airline" placeholder="e.g. IndiGo" />
+        </label>
+        <label>Flight Number
+          <input type="text" name="flightNumber" placeholder="e.g. 6E 202" />
+        </label>
+        <label>Aircraft
+          <input type="text" name="aircraft" placeholder="e.g. A320neo" />
+        </label>
+
+        <label>Origin (airport code)
+          <input type="text" name="origin" list="airport-list" placeholder="HYD" required maxlength="4" />
+        </label>
+        <label>Destination (airport code)
+          <input type="text" name="destination" list="airport-list" placeholder="DXB" required maxlength="4" />
+        </label>
+
+        <label>Departure time (local)
+          <input type="time" name="departTime" />
+        </label>
+        <label>Arrival time (local)
+          <input type="time" name="arriveTime" />
+        </label>
+        <label>Arrival date (if different)
+          <input type="date" name="arriveDate" />
+        </label>
+        <label>Seat
+          <input type="text" name="seat" placeholder="e.g. 14A" />
+        </label>
+      </div>
+
+      <label class="full-width">Notes
+        <textarea name="notes" rows="2" placeholder="Anything worth remembering about this trip"></textarea>
+      </label>
+
+      <datalist id="airport-list"></datalist>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancel-dialog">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Flight</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Settings dialog -->
+  <dialog id="settings-dialog">
+    <h3>Settings</h3>
+
+    <form id="settings-form">
+      <label>Home airport code
+        <input type="text" id="home-airport-input" maxlength="4" placeholder="HYD" required />
+      </label>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancel-settings">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+
+    <hr />
+
+    <h4>Add a custom airport</h4>
+    <form id="custom-airport-form" class="form-grid">
+      <label>Code <input type="text" name="code" maxlength="4" required /></label>
+      <label>Name <input type="text" name="name" /></label>
+      <label>City <input type="text" name="city" /></label>
+      <label>Country (ISO2) <input type="text" name="country" maxlength="2" placeholder="IN" /></label>
+      <label>Latitude <input type="number" step="any" name="lat" required /></label>
+      <label>Longitude <input type="number" step="any" name="lon" required /></label>
+      <label>Timezone (IANA) <input type="text" name="tz" placeholder="Asia/Kolkata" required /></label>
+      <button type="submit" class="btn btn-primary full-width">Add Airport</button>
+    </form>
+
+    <hr />
+
+    <h4>Backup</h4>
+    <div class="dialog-actions" style="justify-content: flex-start; gap: 12px;">
+      <button type="button" class="btn btn-ghost" id="export-btn">Export data</button>
+      <label class="btn btn-ghost" style="cursor:pointer;">
+        Import data
+        <input type="file" id="import-input" accept="application/json" style="display:none;" />
+      </label>
+    </div>
+
+    <hr />
+
+    <h4>Import a Flighty CSV export</h4>
+    <p class="settings-hint">Adds/updates flights from a "FlightyExport-*.csv" file. Existing flights with the same ID are updated, not duplicated.</p>
+    <div class="dialog-actions" style="justify-content: flex-start; gap: 12px;">
+      <label class="btn btn-primary" style="cursor:pointer;">
+        Import Flighty CSV
+        <input type="file" id="csv-import-input" accept=".csv,text/csv" style="display:none;" />
+      </label>
+    </div>
+  </dialog>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/geo.js"></script>
+  <script src="js/airports.js"></script>
+  <script src="js/airlines.js"></script>
+  <script src="js/continents.js"></script>
+  <script src="js/csvImport.js"></script>
+  <script src="js/seedFlights.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
