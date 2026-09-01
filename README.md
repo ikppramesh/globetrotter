@@ -5,6 +5,8 @@ passport view — a live world map with a day/night terminator, per-airport loca
 clocks, a golden-ticket boarding pass summarizing your travel stats, and a stats
 dashboard. Runs entirely in the browser: no backend, no build step, no account.
 
+**Live: [globetrotter-ramesh.vercel.app](https://globetrotter-ramesh.vercel.app/)**
+
 ![World map with flight routes and day/night shading](screenshots/world-map.png)
 
 ## Features
