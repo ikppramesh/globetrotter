@@ -36,8 +36,9 @@ dashboard. Runs entirely in the browser: no backend, no build step, no account.
   ![Flight log list](screenshots/flight-log.png)
 
 - **Import your own history** — drop in a [Flighty](https://flighty.com/) CSV
-  export (Settings → Import Flighty CSV) and it parses dates, times,
-  airlines, and aircraft directly; re-importing later updates existing
+  export, any spreadsheet CSV with From/To/Date columns, or a calendar
+  `.ics` export (Settings → Import CSV / .ics). Dates, times, airlines, and
+  aircraft are parsed directly; re-importing later updates existing
   flights instead of duplicating them.
 - **Everything is local** — flights and settings live in your browser's
   `localStorage`. Nothing is sent anywhere. Export/import a JSON backup from
@@ -68,8 +69,8 @@ by what you add, edit, or import.
 - **One at a time** — click **+ Add Flight** and fill in the form. Give it a
   departure and arrival local time (not just a date) and the app computes
   exact flight duration across time zones for you.
-- **In bulk** — Settings → **Import Flighty CSV**, pointing at a Flighty
-  export. Unrecognized airport codes or airline codes are called out after
+- **In bulk** — Settings → **Import CSV / .ics**, pointing at a Flighty
+  export, a generic CSV, or a calendar file. Unrecognized airport codes or airline codes are called out after
   import so you can add them.
 - **Custom airports** — Settings → **Add a custom airport** if a code isn't
   in the built-in database (code, name, city, country, lat/lon, IANA
@@ -86,7 +87,7 @@ js/
   airports.js            Built-in airport database (code, name, city, country, lat/lon, tz)
   airlines.js             ICAO airline code -> display name map (used by the CSV importer)
   continents.js            Country -> continent lookup, for the "continents covered" dashboard card
-  csvImport.js            Flighty CSV export parser
+  csvImport.js            CSV (Flighty/generic) and .ics calendar import parsers
   seedFlights.js           Bundled starter flight history (loaded once on a brand-new browser)
 ```
 

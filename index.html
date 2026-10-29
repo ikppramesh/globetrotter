@@ -217,12 +217,12 @@
 
     <hr />
 
-    <h4>Import a Flighty CSV export</h4>
-    <p class="settings-hint">Adds/updates flights from a "FlightyExport-*.csv" file. Existing flights with the same ID are updated, not duplicated.</p>
+    <h4>Import flights from CSV or calendar</h4>
+    <p class="settings-hint">Reads a Flighty export, any CSV with From/To/Date columns (optional: Airline, Flight, Depart Time, Arrive Time, Aircraft, Seat, Notes), or a calendar (.ics) export whose events mention airport codes, like "UA 123 SFO to JFK". Re-importing updates matching flights instead of duplicating them.</p>
     <div class="dialog-actions" style="justify-content: flex-start; gap: 12px;">
       <label class="btn btn-primary" style="cursor:pointer;">
-        Import Flighty CSV
-        <input type="file" id="csv-import-input" accept=".csv,text/csv" style="display:none;" />
+        Import CSV / .ics
+        <input type="file" id="csv-import-input" accept=".csv,.ics,text/csv,text/calendar" style="display:none;" />
       </label>
     </div>
   </dialog>

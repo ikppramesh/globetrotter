@@ -709,7 +709,12 @@
     reader.onload = () => {
       try {
         const known = new Set(airports.map((a) => a.code));
-        const { records, unknownAirports, unknownAirlines } = CSVUtils.parseFlightyCSV(reader.result, known);
+        const tzByCode = Object.fromEntries(airports.map((a) => [a.code, a.tz]));
+        const { records, unknownAirports, unknownAirlines, skipped } = CSVUtils.parseImport(reader.result, known, tzByCode);
+        if (!records.length) {
+          alert("No flights were found in that file." + (skipped ? ` ${skipped} row(s)/event(s) were skipped because they had no recognizable origin, destination or date.` : ""));
+          return;
+        }
         const byId = new Map(flights.map((f) => [f.id, f]));
         let added = 0, updated = 0;
         records.forEach((rec) => {
@@ -722,6 +727,7 @@
         renderAll();
 
         let msg = `Imported ${records.length} flights (${added} new, ${updated} updated).`;
+        if (skipped) msg += ` ${skipped} row(s)/event(s) skipped (no recognizable origin, destination or date).`;
         if (unknownAirports.length) {
           msg += `\n\nThese airport codes aren't in the database yet, so those legs won't show on the map or count toward stats until you add them in Settings: ${unknownAirports.join(", ")}.`;
         }
@@ -730,7 +736,7 @@
         }
         alert(msg);
       } catch (err) {
-        alert("Could not parse that CSV: " + err.message);
+        alert("Could not import that file: " + err.message);
       }
     };
     reader.readAsText(file);
