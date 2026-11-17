@@ -767,6 +767,131 @@
     e.target.value = "";
   });
 
+  // ---------- Travel Wrapped (shareable yearly card) ----------
+  const wrappedDialog = document.getElementById("wrapped-dialog");
+  const wrappedYearSelect = document.getElementById("wrapped-year");
+  const wrappedCanvas = document.getElementById("wrapped-canvas");
+  const wrappedBody = document.getElementById("wrapped-body");
+  const wrappedEmpty = document.getElementById("wrapped-empty");
+  const wrappedShareBtn = document.getElementById("wrapped-share");
+
+  function flightYears() {
+    const years = new Set(flights.map((f) => (f.date || "").slice(0, 4)).filter((y) => /^\d{4}$/.test(y)));
+    return [...years].sort((a, b) => b.localeCompare(a));
+  }
+
+  function plural(n, word) {
+    return `${n} ${word}${n === 1 ? "" : "s"}`;
+  }
+
+  function computeWrapped(year) {
+    const byCode = airportByCode();
+    const yearFlights = flights.filter((f) => (f.date || "").startsWith(year));
+    const airlineCounts = {};
+    const routeCounts = {};
+    const monthCounts = {};
+    const countrySet = new Set();
+    const continentSet = new Set();
+    let totalKm = 0;
+    let totalMinutes = 0;
+    let longest = null;
+
+    yearFlights.forEach((f) => {
+      totalMinutes += flightDurationMinutes(f);
+      const airline = (f.airline || "").trim();
+      if (airline) airlineCounts[airline] = (airlineCounts[airline] || 0) + 1;
+      const month = f.date.slice(0, 7);
+      monthCounts[month] = (monthCounts[month] || 0) + 1;
+
+      const o = byCode[f.origin];
+      const d = byCode[f.destination];
+      if (!o || !d) return;
+      [o, d].forEach((a) => {
+        countrySet.add(a.country);
+        if (CONTINENTS[a.country]) continentSet.add(CONTINENTS[a.country]);
+      });
+      const km = GeoUtils.haversineKm(o.lat, o.lon, d.lat, d.lon);
+      totalKm += km;
+      const key = [f.origin, f.destination].sort().join("-");
+      if (!routeCounts[key]) routeCounts[key] = { label: `${f.origin} ↔ ${f.destination}`, count: 0 };
+      routeCounts[key].count++;
+      if (!longest || km > longest.km) longest = { km, label: `${f.origin} → ${f.destination}` };
+    });
+
+    const topAirline = Object.entries(airlineCounts).sort((a, b) => b[1] - a[1])[0];
+    const topRoute = Object.values(routeCounts).sort((a, b) => b.count - a.count)[0];
+    const topMonth = Object.entries(monthCounts).sort((a, b) => b[1] - a[1])[0];
+
+    return {
+      year,
+      flightCount: yearFlights.length,
+      distance: `${Math.round(totalKm).toLocaleString("en-IN")} km`,
+      flightTime: formatDuration(totalMinutes),
+      countries: `${countrySet.size}`,
+      continents: `${continentSet.size} of ${ALL_CONTINENTS.length}`,
+      topAirline: topAirline ? `${topAirline[0]} · ${plural(topAirline[1], "flight")}` : "—",
+      favouriteRoute: topRoute ? `${topRoute.label} · ${plural(topRoute.count, "flight")}` : "—",
+      longestFlight: longest ? `${longest.label} · ${Math.round(longest.km).toLocaleString("en-IN")} km` : "—",
+      busiestMonth: topMonth
+        ? `${new Date(topMonth[0] + "-01T00:00:00").toLocaleDateString("en-GB", { month: "long" })} · ${plural(topMonth[1], "flight")}`
+        : "—",
+    };
+  }
+
+  function drawWrapped() {
+    const data = computeWrapped(wrappedYearSelect.value);
+    WrappedUtils.drawCard(wrappedCanvas, { ...data, footer: location.host || "Globetrotter" });
+    wrappedCanvas.setAttribute("aria-label", `Travel Wrapped ${data.year}: ${data.flightCount} flights, ${data.distance}, ${data.countries} countries.`);
+  }
+
+  function canShareImages() {
+    if (!navigator.share || !navigator.canShare) return false;
+    return navigator.canShare({ files: [new File(["x"], "wrapped.png", { type: "image/png" })] });
+  }
+
+  function openWrapped() {
+    const years = flightYears();
+    const hasFlights = years.length > 0;
+    wrappedYearSelect.innerHTML = years.map((y) => `<option value="${y}">${y}</option>`).join("");
+    wrappedBody.hidden = !hasFlights;
+    wrappedEmpty.hidden = hasFlights;
+    wrappedShareBtn.hidden = !canShareImages();
+    if (hasFlights) drawWrapped();
+    wrappedDialog.showModal();
+  }
+
+  function wrappedFileName() {
+    return `globetrotter-wrapped-${wrappedYearSelect.value}.png`;
+  }
+
+  function wrappedPngBlob() {
+    return new Promise((resolve) => wrappedCanvas.toBlob(resolve, "image/png"));
+  }
+
+  document.getElementById("wrapped-btn").addEventListener("click", openWrapped);
+  document.getElementById("close-wrapped").addEventListener("click", () => wrappedDialog.close());
+  wrappedYearSelect.addEventListener("change", drawWrapped);
+
+  document.getElementById("wrapped-download").addEventListener("click", async () => {
+    const blob = await wrappedPngBlob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = wrappedFileName();
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  wrappedShareBtn.addEventListener("click", async () => {
+    const blob = await wrappedPngBlob();
+    const file = new File([blob], wrappedFileName(), { type: "image/png" });
+    try {
+      await navigator.share({ files: [file], title: `Globetrotter ${wrappedYearSelect.value} Wrapped` });
+    } catch (err) {
+      if (err.name !== "AbortError") alert("Could not share the image: " + err.message);
+    }
+  });
+
   // ---------- Render orchestration ----------
   function renderAll() {
     renderMap();

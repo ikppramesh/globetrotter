@@ -21,6 +21,7 @@
       <span class="home-date" id="home-date"></span>
     </div>
     <div class="topbar-actions">
+      <button class="btn btn-ghost" id="wrapped-btn">Travel Wrapped</button>
       <button class="btn btn-ghost" id="settings-btn">Settings</button>
       <button class="btn btn-primary" id="add-flight-btn">+ Add Flight</button>
     </div>
@@ -176,6 +177,23 @@
     </form>
   </dialog>
 
+  <!-- Travel Wrapped dialog -->
+  <dialog id="wrapped-dialog" class="wrapped-dialog">
+    <h3>Travel Wrapped</h3>
+    <div id="wrapped-body">
+      <label>Year
+        <select id="wrapped-year"></select>
+      </label>
+      <canvas id="wrapped-canvas" class="wrapped-canvas" role="img" aria-label="Travel Wrapped summary"></canvas>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="close-wrapped">Close</button>
+        <button type="button" class="btn btn-ghost" id="wrapped-share" hidden>Share image</button>
+        <button type="button" class="btn btn-primary" id="wrapped-download">Download PNG</button>
+      </div>
+    </div>
+    <p id="wrapped-empty" class="empty-state" hidden>Log a flight first, then your yearly summary will appear here.</p>
+  </dialog>
+
   <!-- Settings dialog -->
   <dialog id="settings-dialog">
     <h3>Settings</h3>
@@ -234,6 +252,7 @@
   <script src="js/continents.js"></script>
   <script src="js/csvImport.js"></script>
   <script src="js/seedFlights.js"></script>
+  <script src="js/wrapped.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

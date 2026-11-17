@@ -30,6 +30,11 @@ dashboard. Runs entirely in the browser: no backend, no build step, no account.
 
   ![Stats dashboard with charts](screenshots/dashboard.png)
 
+- **Travel Wrapped** — pick any year you've flown and get a shareable summary
+  card (flights, distance, flight time, countries, continents, top airline,
+  favourite route, longest flight, busiest month). Download it as a PNG, or
+  share it straight from your phone where the browser supports image sharing.
+
 - **Flight log** — every flight you've added, with edit/delete, sorted newest
   first.
 
@@ -88,6 +93,7 @@ js/
   airlines.js             ICAO airline code -> display name map (used by the CSV importer)
   continents.js            Country -> continent lookup, for the "continents covered" dashboard card
   csvImport.js            CSV (Flighty/generic) and .ics calendar import parsers
+  wrapped.js              Draws the Travel Wrapped share card onto a canvas (PNG export)
   seedFlights.js           Bundled starter flight history (loaded once on a brand-new browser)
 ```
 
